@@ -3,7 +3,7 @@ package com.pikon.android_quiz;
 import java.util.ArrayList;
 
 public class Quiz {
-    private ArrayList<Question> questions;
+    private final ArrayList<Question> questions;
 
     public Quiz(ArrayList<Question> questions) {
         this.questions = questions;
@@ -19,5 +19,12 @@ public class Quiz {
 
     public ArrayList<Question> getQuestions() {
         return questions;
+    }
+
+    @Override
+    public String toString() {
+        return "Quiz{" +
+                "questions=" + questions +
+                '}';
     }
 }

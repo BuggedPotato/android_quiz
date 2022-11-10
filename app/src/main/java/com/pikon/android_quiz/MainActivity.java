@@ -1,5 +1,7 @@
 package com.pikon.android_quiz;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
@@ -7,6 +9,8 @@ import android.view.Menu;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -24,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        checkPermission( Manifest.permission.READ_EXTERNAL_STORAGE, 420 );
+        checkPermission( Manifest.permission.WRITE_EXTERNAL_STORAGE, 421 );
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -54,5 +61,12 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    public void checkPermission(String permission, int requestCode) {
+        if( ContextCompat.checkSelfPermission(MainActivity.this, permission) == PackageManager.PERMISSION_DENIED)
+        {
+            ActivityCompat.requestPermissions( MainActivity.this, new String[] {permission}, requestCode );
+        }
     }
 }

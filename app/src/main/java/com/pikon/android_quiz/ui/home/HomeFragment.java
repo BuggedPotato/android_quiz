@@ -22,21 +22,21 @@ import com.pikon.android_quiz.databinding.FragmentHomeBinding;
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
-    ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
+    ActivityResultLauncher<String> mGetContent = registerForActivityResult( new ActivityResultContracts.GetContent(),
             new ActivityResultCallback<Uri>() {
                 @Override
-                public void onActivityResult(Uri uri) {
+                public void onActivityResult( Uri uri ) {
                     showFileData( uri );
                 }
-            });
+            } );
 
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView( @NonNull LayoutInflater inflater,
+                              ViewGroup container, Bundle savedInstanceState ) {
         HomeViewModel homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
+                new ViewModelProvider( this ).get( HomeViewModel.class );
 
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        binding = FragmentHomeBinding.inflate( inflater, container, false );
         View root = binding.getRoot();
 
 //        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle( "Totally Not Drill 2" );
@@ -45,20 +45,25 @@ public class HomeFragment extends Fragment {
 //        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
         final Button btnLoadFile = binding.btnLoadFile;
-        btnLoadFile.setOnClickListener(new View.OnClickListener() {
+        btnLoadFile.setOnClickListener( new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick( View view ) {
                 mGetContent.launch( "text/plain" );
             }
-        });
+        } );
 
         return root;
     }
 
-    private void showFileData( Uri uri ){
-        Quiz q = QuizFileReader.getFileData(getContext(), uri);
-        if(q != null)
-            Log.d( "DEBUG", q.toString() );
+    private void showFileData( Uri uri ) {
+        Quiz q = QuizFileReader.getFileData( getContext(), uri );
+        if ( q == null ) {
+            Log.w( "DEBUG", "Couldn't parse file data" );
+            binding.tvQuestionsCount.setText( "Unable to parse data" );
+            return;
+        }
+        Log.d( "DEBUG", q.toString() );
+        binding.tvQuestionsCount.setText( String.format( "%d questions found", q.getQuestions().size() ) );
     }
 
     @Override
