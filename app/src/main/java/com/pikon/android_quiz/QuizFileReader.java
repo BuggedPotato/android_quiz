@@ -42,6 +42,7 @@ public class QuizFileReader {
                 Question question = new Question( title, answers );
                 quiz.addQuestion( question );
             }
+            scanner.close();
             return quiz;
         } catch ( IOException e ) {
             Log.e( "DEBUG", String.format( "File %s not found", uri.getPath() ) );

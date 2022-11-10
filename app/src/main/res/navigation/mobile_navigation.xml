@@ -12,6 +12,12 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
+        android:id="@+id/nav_quiz"
+        android:name="com.pikon.android_quiz.ui.question.QuestionFragment"
+        android:label="Quiz"
+        tools:layout="@layout/fragment_question" />
+
+    <fragment
         android:id="@+id/nav_gallery"
         android:name="com.pikon.android_quiz.ui.gallery.GalleryFragment"
         android:label="@string/menu_gallery"
