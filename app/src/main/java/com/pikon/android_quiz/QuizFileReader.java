@@ -22,7 +22,7 @@ public class QuizFileReader {
     public static Quiz getFileData( Context context, Uri uri ) {
         try {
             File f = QuizFileReader.copyFile( context, uri );
-            Quiz quiz = new Quiz();
+            Quiz quiz = new Quiz( uri );
             Scanner scanner = new Scanner( f );
             scanner.useDelimiter( Pattern.compile( "\\R{2,}" ) );
             while ( scanner.hasNext() ) {

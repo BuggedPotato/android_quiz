@@ -9,19 +9,31 @@
         android:id="@+id/nav_home"
         android:name="com.pikon.android_quiz.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_nav_home_to_nav_quiz"
+            app:destination="@id/nav_quiz" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_quiz"
         android:name="com.pikon.android_quiz.ui.question.QuestionFragment"
         android:label="Quiz"
-        tools:layout="@layout/fragment_question" />
+        tools:layout="@layout/fragment_question" >
+        <argument
+            android:name="quizUri"
+            app:argType="string" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_gallery"
         android:name="com.pikon.android_quiz.ui.gallery.GalleryFragment"
         android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_gallery" >
+        <action
+            android:id="@+id/action_nav_gallery_to_nav_slideshow"
+            app:destination="@id/nav_slideshow" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_slideshow"

@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.pikon.android_quiz.Quiz;
 import com.pikon.android_quiz.QuizFileReader;
@@ -56,9 +57,9 @@ public class HomeFragment extends Fragment {
         binding.btnStartQuiz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.flFrame, new QuestionFragment() );
-                transaction.commit();
+                Bundle bundle = new Bundle();
+                bundle.putString( "quizUri", homeViewModel.getQuiz().getValue().getUri().getPath() );
+                Navigation.findNavController( root ).navigate( R.id.action_nav_home_to_nav_quiz, bundle );
             }
         });
 
