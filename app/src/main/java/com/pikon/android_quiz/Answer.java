@@ -28,6 +28,7 @@ public class Answer {
         return "Answer{" +
                 "text='" + text + '\'' +
                 ", correct=" + correct +
+                ", answered=" + answered +
                 '}';
     }
 }

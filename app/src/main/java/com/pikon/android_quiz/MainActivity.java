@@ -19,11 +19,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.pikon.android_quiz.databinding.ActivityMainBinding;
+import com.pikon.android_quiz.ui.home.DrawerLocker;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DrawerLocker {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
+    public static Quiz loadedQuiz;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,13 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    public void setDrawerEnabled(boolean enabled) {
+        int lockMode = enabled ? DrawerLayout.LOCK_MODE_UNLOCKED :
+                DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
+        binding.drawerLayout.setDrawerLockMode(lockMode);
+//        toggle.setDrawerIndicatorEnabled(enabled);
     }
 
     public void checkPermission(String permission, int requestCode) {

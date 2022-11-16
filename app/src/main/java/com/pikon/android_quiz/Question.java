@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Question {
     private String text;
     private ArrayList<Answer> answers;
-    private int result;
+    private AnswerResult result;
 
     public Question(String question, ArrayList<Answer> answers) {
         this.text = question;
@@ -23,11 +23,11 @@ public class Question {
         boolean hasFalse = results.contains(false);
         boolean hasTrue = results.contains(true);
         if( hasTrue && hasFalse )
-            this.result = 50;
+            this.result = AnswerResult.MIXED;
         else if( hasFalse && !hasTrue )
-            this.result = -100;
+            this.result = AnswerResult.INCORRECT;
         else if( hasTrue && !hasFalse )
-            this.result = 100;
+            this.result = AnswerResult.CORRECT;
     }
 
     public String getText() {

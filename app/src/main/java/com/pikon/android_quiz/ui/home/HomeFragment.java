@@ -14,17 +14,15 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
+import com.pikon.android_quiz.MainActivity;
 import com.pikon.android_quiz.Quiz;
-import com.pikon.android_quiz.QuizFileReader;
 import com.pikon.android_quiz.R;
 import com.pikon.android_quiz.databinding.FragmentHomeBinding;
-import com.pikon.android_quiz.ui.question.QuestionFragment;
 
 public class HomeFragment extends Fragment {
 
@@ -39,6 +37,7 @@ public class HomeFragment extends Fragment {
         homeViewModel.getQuiz().observe(getViewLifecycleOwner(), new Observer<Quiz>() {
             @Override
             public void onChanged( Quiz quiz ) {
+                MainActivity.loadedQuiz = quiz;
                 showFileData( quiz );
             }
         });
@@ -59,7 +58,13 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
                 bundle.putString( "quizUri", homeViewModel.getQuiz().getValue().getUri().getPath() );
-                Navigation.findNavController( root ).navigate( R.id.action_nav_home_to_nav_quiz, bundle );
+                Navigation.findNavController( root ).navigate( R.id.action_nav_home_to_nav_quiz, bundle,
+                        new NavOptions.Builder()
+                                .setEnterAnim( androidx.navigation.ui.R.animator.nav_default_enter_anim )
+                                .setExitAnim( androidx.navigation.ui.R.animator.nav_default_exit_anim )
+                                .setPopExitAnim( androidx.navigation.ui.R.animator.nav_default_exit_anim )
+                                .build()
+                );
             }
         });
 

@@ -27,13 +27,12 @@ public class QuizFileReader {
             scanner.useDelimiter( Pattern.compile( "\\R{2,}" ) );
             while ( scanner.hasNext() ) {
                 ArrayList<String> data = new ArrayList<>( Arrays.asList( scanner.next().split( "\\n" ) ) );
-                Log.d( "DEBUG", Arrays.toString( data.toArray() ) );
                 String title = data.get( 0 );
                 data.remove( 0 );
                 ArrayList<Answer> answers = new ArrayList<>();
                 for ( String line : data ) {
                     Matcher m = Pattern.compile( "\\s+[\\w\\s]+" ).matcher( line );
-                    boolean correct = Pattern.compile( "^>>>[A-Z]\\)" ).matcher( line ).matches();
+                    boolean correct = Pattern.compile( "^>>>[A-Z]\\)" ).matcher( line ).find();
                     if ( !m.find() )
                         return null;
                     Answer answer = new Answer( m.group( 0 ).trim(), correct );
