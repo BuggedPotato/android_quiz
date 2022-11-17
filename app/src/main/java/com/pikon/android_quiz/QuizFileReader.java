@@ -44,7 +44,7 @@ public class QuizFileReader {
             scanner.close();
             return quiz;
         } catch ( IOException e ) {
-            Log.e( "DEBUG", String.format( "File %s not found", uri.getPath() ) );
+            Log.e( "DEBUG", String.format( "File '%s' not found", uri.getPath() ) );
             e.printStackTrace();
         }
         return null;
@@ -52,7 +52,7 @@ public class QuizFileReader {
 
     public static File copyFile( Context context, Uri uri ) throws IOException {
         InputStream inputStream = context.getContentResolver().openInputStream( uri );
-        File targetFile = new File( Environment.getExternalStorageDirectory(), "targetFile.tmp" );
+        File targetFile = new File( Environment.getExternalStorageDirectory(), "targetFile.txt" );
         Files.copy( inputStream, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING );
         inputStream.close();
         return targetFile;

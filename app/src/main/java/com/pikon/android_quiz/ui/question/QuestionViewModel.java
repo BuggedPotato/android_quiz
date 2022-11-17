@@ -19,10 +19,12 @@ public class QuestionViewModel extends ViewModel {
 
     private MutableLiveData<Question> mQuestion;
     private MutableLiveData<ArrayList<Answer>> mCheckedAnswers;
+    private MutableLiveData<Quiz> mQuiz;
 
     public QuestionViewModel() {
         mQuestion = new MutableLiveData<Question>();
         mCheckedAnswers = new MutableLiveData<ArrayList<Answer>>(){};
+        mQuiz = new MutableLiveData<Quiz>();
         clearCheckedAnswers();
     }
 
@@ -49,7 +51,19 @@ public class QuestionViewModel extends ViewModel {
         this.mCheckedAnswers.setValue( new ArrayList<>() );
     }
 
-    public void setQuestion( Quiz q ) {
+    public MutableLiveData<Quiz> getQuiz() {
+        return mQuiz;
+    }
+
+    public void setQuiz( Context context, Uri uri ) {
+        this.mQuiz.setValue( QuizFileReader.getFileData( context, uri ) );
+    }
+    
+    public void setQuiz(Quiz quiz) {
+        this.mQuiz.setValue( quiz );
+    }
+
+    public void setQuestion(Quiz q ) {
         this.mQuestion.setValue( q.getNextQuestion() );
     }
 }

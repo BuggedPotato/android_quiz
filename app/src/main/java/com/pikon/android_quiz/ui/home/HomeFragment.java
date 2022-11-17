@@ -18,6 +18,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.pikon.android_quiz.MainActivity;
 import com.pikon.android_quiz.Quiz;
@@ -29,21 +30,22 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private HomeViewModel homeViewModel;
 
-    public View onCreateView( @NonNull LayoutInflater inflater,
-                              ViewGroup container, Bundle savedInstanceState ) {
-        homeViewModel =
-                new ViewModelProvider( this ).get( HomeViewModel.class );
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState ) {
+        homeViewModel = new ViewModelProvider( this ).get( HomeViewModel.class );
 
         homeViewModel.getQuiz().observe(getViewLifecycleOwner(), new Observer<Quiz>() {
             @Override
             public void onChanged( Quiz quiz ) {
-                MainActivity.loadedQuiz = quiz;
+                // MainActivity.loadedQuiz = quiz;
                 showFileData( quiz );
             }
         });
 
         binding = FragmentHomeBinding.inflate( inflater, container, false );
         View root = binding.getRoot();
+
+        Log.d( "DEBUG", "opachkiii" );
 
         final Button btnLoadFile = binding.btnLoadFile;
         btnLoadFile.setOnClickListener( new View.OnClickListener() {
@@ -53,21 +55,18 @@ public class HomeFragment extends Fragment {
             }
         } );
 
+        Fragment selfRef = this;
         binding.btnStartQuiz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
-                bundle.putString( "quizUri", homeViewModel.getQuiz().getValue().getUri().getPath() );
-                Navigation.findNavController( root ).navigate( R.id.action_nav_home_to_nav_quiz, bundle,
-                        new NavOptions.Builder()
-                                .setEnterAnim( androidx.navigation.ui.R.animator.nav_default_enter_anim )
-                                .setExitAnim( androidx.navigation.ui.R.animator.nav_default_exit_anim )
-                                .setPopExitAnim( androidx.navigation.ui.R.animator.nav_default_exit_anim )
-                                .build()
-                );
+                bundle.putParcelable( "quizUri", homeViewModel.getQuiz().getValue().getUri() );
+                NavHostFragment.findNavController( selfRef )
+                        .navigate( R.id.action_nav_home_to_nav_quiz, bundle );
+//                Navigation.findNavController( root ).navigate( R.id.action_nav_home_to_nav_quiz, bundle,
+//                );
             }
         });
-
         return root;
     }
 
@@ -90,6 +89,16 @@ public class HomeFragment extends Fragment {
         binding.tvQuestionsCount.setText( String.format( "%d questions found", quiz.getQuestions().size() ) );
         binding.btnStartQuiz.setEnabled( true );
     }
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        Log.d( "DEBUG", "resume" );
+//        if( MainActivity.loadedQuiz != null && homeViewModel.getQuiz().getValue() == null ){
+//            Log.d( "DEBUG", "> resume if" );
+//            homeViewModel.setQuiz( getContext(), MainActivity.loadedQuiz.getUri() );
+//        }
+//    }
 
     @Override
     public void onDestroyView() {

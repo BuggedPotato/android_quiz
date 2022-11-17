@@ -12,7 +12,12 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_nav_home_to_nav_quiz"
-            app:destination="@id/nav_quiz" />
+            app:destination="@id/nav_quiz"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:launchSingleTop="false"
+            app:popExitAnim="@anim/nav_default_exit_anim"
+            app:popUpToInclusive="false" />
     </fragment>
 
     <fragment
@@ -20,10 +25,29 @@
         android:name="com.pikon.android_quiz.ui.question.QuestionFragment"
         android:label="Quiz"
         tools:layout="@layout/fragment_question" >
+        <action
+            android:id="@+id/action_nav_quiz_to_nav_home"
+            app:destination="@id/nav_home"
+            app:launchSingleTop="false"
+            app:popUpTo="@id/nav_home"
+            app:popUpToInclusive="false" />
         <argument
             android:name="quizUri"
-            app:argType="string" />
+            app:argType="android.net.Uri" />
+        <action
+            android:id="@+id/action_nav_quiz_to_nav_result"
+            app:destination="@id/nav_result"
+            app:enterAnim="@anim/nav_default_enter_anim" />
     </fragment>
+
+    <fragment
+        android:id="@+id/nav_result"
+        android:name="com.pikon.android_quiz.ui.result.ResultFragment"
+        android:label="Result"
+        tools:layout="@layout/fragment_result"
+        <argument
+            android:name="quiz"
+        />
 
     <fragment
         android:id="@+id/nav_gallery"

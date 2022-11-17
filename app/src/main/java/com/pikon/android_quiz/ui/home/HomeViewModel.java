@@ -29,6 +29,10 @@ public class HomeViewModel extends ViewModel {
         this.mQuiz.setValue( QuizFileReader.getFileData( context, uri ) );
     }
 
+    public void setQuiz( Quiz quiz ) {
+        this.mQuiz.setValue( quiz );
+    }
+
     public LiveData<String> getText() {
         return mText;
     }

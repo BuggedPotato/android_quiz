@@ -1,6 +1,7 @@
 package com.pikon.android_quiz.ui.question;
 
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,10 +24,12 @@ import androidx.navigation.Navigation;
 import com.pikon.android_quiz.Answer;
 import com.pikon.android_quiz.MainActivity;
 import com.pikon.android_quiz.Question;
+import com.pikon.android_quiz.R;
 import com.pikon.android_quiz.databinding.FragmentQuestionBinding;
 import com.pikon.android_quiz.ui.home.DrawerLocker;
 import com.pikon.android_quiz.ui.home.HomeViewModel;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -49,7 +52,8 @@ public class QuestionFragment extends Fragment {
                 questionViewModel.clearCheckedAnswers();
             }
         });
-        questionViewModel.setQuestion( MainActivity.loadedQuiz );
+        questionViewModel.setQuiz(  getContext(), getArguments().getParcelable( "quizUri" ) );
+        questionViewModel.setQuestion( questionViewModel.getQuiz().getValue() );
 
         binding = FragmentQuestionBinding.inflate( inflater, container, false );
         View root = binding.getRoot();
@@ -59,10 +63,11 @@ public class QuestionFragment extends Fragment {
             public void onClick(View view) {
                 questionViewModel.getQuestion().getValue().answer( questionViewModel.getCheckedAnswers().getValue().toArray(new Answer[0]) );
                 Log.d( "DEBUG", questionViewModel.getQuestion().getValue().toString() );
-                questionViewModel.setQuestion( MainActivity.loadedQuiz );
+                questionViewModel.setQuestion( questionViewModel.getQuiz().getValue() );
             }
         });
 
+        Fragment selfRef = this;
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -73,9 +78,7 @@ public class QuestionFragment extends Fragment {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                // TODO
-                                getViewModelStore().clear();
-                                Navigation.findNavController(root).popBackStack();
+                                Navigation.findNavController(root).navigate( R.id.action_nav_quiz_to_nav_home );
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
