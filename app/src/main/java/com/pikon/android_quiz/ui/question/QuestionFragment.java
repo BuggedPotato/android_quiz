@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.pikon.android_quiz.Answer;
 import com.pikon.android_quiz.MainActivity;
@@ -32,6 +33,7 @@ import com.pikon.android_quiz.ui.home.HomeViewModel;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 public class QuestionFragment extends Fragment {
 
@@ -40,19 +42,25 @@ public class QuestionFragment extends Fragment {
 
     public View onCreateView( @NonNull LayoutInflater inflater,
                               ViewGroup container, Bundle savedInstanceState ) {
+        Fragment selfRef = this;
         questionViewModel = new ViewModelProvider( this ).get( QuestionViewModel.class );
         questionViewModel.getQuestion().observe(getViewLifecycleOwner(), new Observer<Question>() {
             @Override
             public void onChanged(Question question) {
+                Log.d( "DEBUG", String.valueOf( questionViewModel.getQuiz().getValue() == null ) );
                 if( question == null ) {
                     Log.d( "DEBUG", "=== END ===" );
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable( "quiz", questionViewModel.getQuiz().getValue() );
+                    NavHostFragment.findNavController( selfRef )
+                            .navigate( R.id.action_nav_quiz_to_nav_result, bundle );
                     return;
                 }
                 showQuestionData( question );
                 questionViewModel.clearCheckedAnswers();
             }
         });
-        questionViewModel.setQuiz(  getContext(), getArguments().getParcelable( "quizUri" ) );
+        questionViewModel.setQuiz(  getContext(), Uri.parse( getArguments().getString( "quizUri" ) ) );
         questionViewModel.setQuestion( questionViewModel.getQuiz().getValue() );
 
         binding = FragmentQuestionBinding.inflate( inflater, container, false );
@@ -67,7 +75,6 @@ public class QuestionFragment extends Fragment {
             }
         });
 
-        Fragment selfRef = this;
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -97,6 +104,8 @@ public class QuestionFragment extends Fragment {
     private void showQuestionData( Question question ) {
         final TextView tvTitle = binding.tvTitle;
         final LinearLayout llAnswers = binding.llAnswers;
+        final String questionNumber = String.format( Locale.ROOT, "%d/%d", questionViewModel.getQuiz().getValue().getCurrentQuestion() + 1, questionViewModel.getQuiz().getValue().getQuestions().size() );
+        binding.tvQuestionNumber.setText( questionNumber );
         if( llAnswers.getChildCount() > 0 )
             llAnswers.removeAllViews();
         tvTitle.setText(question.getText());

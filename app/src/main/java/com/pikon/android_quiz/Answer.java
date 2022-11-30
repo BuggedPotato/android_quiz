@@ -1,6 +1,8 @@
 package com.pikon.android_quiz;
 
-public class Answer {
+import java.io.Serializable;
+
+public class Answer implements Serializable {
     private String text;
     private boolean correct;
     private boolean answered = false;
@@ -21,6 +23,10 @@ public class Answer {
 
     public String getText() {
         return text;
+    }
+
+    public boolean isAnswered() {
+        return answered;
     }
 
     @Override

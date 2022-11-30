@@ -1,11 +1,12 @@
 package com.pikon.android_quiz;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Question {
+public class Question implements Serializable {
     private String text;
     private ArrayList<Answer> answers;
-    private AnswerResult result;
+    private AnswerResult result = AnswerResult.INCORRECT;
 
     public Question(String question, ArrayList<Answer> answers) {
         this.text = question;
@@ -36,6 +37,10 @@ public class Question {
 
     public ArrayList<Answer> getAnswers() {
         return answers;
+    }
+
+    public AnswerResult getResult() {
+        return result;
     }
 
     @Override

@@ -9,14 +9,16 @@ public class ResultViewModel extends ViewModel {
 
     private MutableLiveData<Quiz> mQuiz;
 
-    public ResultViewModel(){
+    public ResultViewModel() {
+        mQuiz = new MutableLiveData<Quiz>();
+        mQuiz.setValue( new Quiz() );
     }
 
     public MutableLiveData<Quiz> getQuiz() {
         return mQuiz;
     }
 
-    public void setQuiz(Quiz quiz) {
+    public void setQuiz( Quiz quiz ) {
         this.mQuiz.setValue( quiz );
     }
 }

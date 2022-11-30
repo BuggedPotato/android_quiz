@@ -1,6 +1,8 @@
 package com.pikon.android_quiz;
 
-public enum AnswerResult {
+import java.io.Serializable;
+
+public enum AnswerResult implements Serializable {
     CORRECT,
     INCORRECT,
     MIXED

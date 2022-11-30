@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -63,7 +64,10 @@ public class QuestionViewModel extends ViewModel {
         this.mQuiz.setValue( quiz );
     }
 
-    public void setQuestion(Quiz q ) {
-        this.mQuestion.setValue( q.getNextQuestion() );
+    public void setQuestion( @Nullable Quiz q ) {
+        if( q != null )
+            this.mQuestion.setValue( q.getNextQuestion() );
+        else
+            this.mQuestion.setValue( null );
     }
 }

@@ -33,11 +33,10 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState ) {
         homeViewModel = new ViewModelProvider( this ).get( HomeViewModel.class );
-
         homeViewModel.getQuiz().observe(getViewLifecycleOwner(), new Observer<Quiz>() {
             @Override
             public void onChanged( Quiz quiz ) {
-                // MainActivity.loadedQuiz = quiz;
+                binding.btnStartQuiz.setEnabled( homeViewModel.getQuiz().getValue() != null );
                 showFileData( quiz );
             }
         });
@@ -45,7 +44,7 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate( inflater, container, false );
         View root = binding.getRoot();
 
-        Log.d( "DEBUG", "opachkiii" );
+        getActivity().setTitle( "Choose your quiz" );
 
         final Button btnLoadFile = binding.btnLoadFile;
         btnLoadFile.setOnClickListener( new View.OnClickListener() {
@@ -56,15 +55,16 @@ public class HomeFragment extends Fragment {
         } );
 
         Fragment selfRef = this;
+        binding.btnStartQuiz.setEnabled( false );
         binding.btnStartQuiz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if( homeViewModel.getQuiz().getValue() == null ) return;
+                // TODO replace by passing quiz object?
                 Bundle bundle = new Bundle();
-                bundle.putParcelable( "quizUri", homeViewModel.getQuiz().getValue().getUri() );
+                bundle.putString( "quizUri", homeViewModel.getQuiz().getValue().getUri() );
                 NavHostFragment.findNavController( selfRef )
                         .navigate( R.id.action_nav_home_to_nav_quiz, bundle );
-//                Navigation.findNavController( root ).navigate( R.id.action_nav_home_to_nav_quiz, bundle,
-//                );
             }
         });
         return root;
@@ -74,7 +74,8 @@ public class HomeFragment extends Fragment {
             new ActivityResultCallback<Uri>() {
                 @Override
                 public void onActivityResult( Uri uri ) {
-                    homeViewModel.setQuiz( getContext(), uri );
+                    if( uri != null )
+                        homeViewModel.setQuiz( getContext(), uri );
                 }
             } );
 
@@ -89,16 +90,6 @@ public class HomeFragment extends Fragment {
         binding.tvQuestionsCount.setText( String.format( "%d questions found", quiz.getQuestions().size() ) );
         binding.btnStartQuiz.setEnabled( true );
     }
-
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        Log.d( "DEBUG", "resume" );
-//        if( MainActivity.loadedQuiz != null && homeViewModel.getQuiz().getValue() == null ){
-//            Log.d( "DEBUG", "> resume if" );
-//            homeViewModel.setQuiz( getContext(), MainActivity.loadedQuiz.getUri() );
-//        }
-//    }
 
     @Override
     public void onDestroyView() {
