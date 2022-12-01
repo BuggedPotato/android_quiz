@@ -6,11 +6,12 @@ import androidx.annotation.Nullable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class Quiz implements Serializable {
     private final ArrayList<Question> questions;
     private int currentQuestion = -1;
-//    private Uri uri;
     private String uri;
 
     public Quiz( ArrayList<Question> questions ) {
@@ -35,6 +36,16 @@ public class Quiz implements Serializable {
         if( currentQuestion + 1 >= questions.size() )
             return null;
         return questions.get( ++currentQuestion );
+    }
+
+    public void shuffleQuestions(){
+        Collections.shuffle( questions );
+    }
+
+    public void shuffleAnswers(){
+        for ( Question q : questions ){
+            q.shuffleAnswers();
+        }
     }
 
     public ArrayList<Question> getQuestions() {

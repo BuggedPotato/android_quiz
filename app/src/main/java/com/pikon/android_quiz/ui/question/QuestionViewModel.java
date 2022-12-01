@@ -14,6 +14,9 @@ import com.pikon.android_quiz.Question;
 import com.pikon.android_quiz.Quiz;
 import com.pikon.android_quiz.QuizFileReader;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class QuestionViewModel extends ViewModel {
@@ -22,11 +25,17 @@ public class QuestionViewModel extends ViewModel {
     private MutableLiveData<ArrayList<Answer>> mCheckedAnswers;
     private MutableLiveData<Quiz> mQuiz;
 
+    private MutableLiveData<Instant> mStartTime;
+    private MutableLiveData<Instant> mMaxTime;
+
     public QuestionViewModel() {
         mQuestion = new MutableLiveData<Question>();
         mCheckedAnswers = new MutableLiveData<ArrayList<Answer>>(){};
         mQuiz = new MutableLiveData<Quiz>();
         clearCheckedAnswers();
+
+        mStartTime = new MutableLiveData<Instant>();
+        mMaxTime = new MutableLiveData<Instant>();
     }
 
     public LiveData<Question> getQuestion() {
@@ -64,10 +73,43 @@ public class QuestionViewModel extends ViewModel {
         this.mQuiz.setValue( quiz );
     }
 
-    public void setQuestion( @Nullable Quiz q ) {
-        if( q != null )
-            this.mQuestion.setValue( q.getNextQuestion() );
+    public void setQuestion( @Nullable Quiz q, Instant startTime, int maxDuration ) {
+//        if( q != null )
+            this.mQuestion.postValue(q.getNextQuestion());
+//            this.mQuestion.setValue( q.getNextQuestion() );
+            this.setStartTime( startTime, maxDuration );
+//        else
+//            this.mQuestion.setValue( null );
+    }
+
+    public boolean hasTimePassed(){
+        if( mMaxTime.getValue() == null )
+            return false;
+        return Instant.now().isAfter( mMaxTime.getValue() );
+    }
+
+    public Duration getTimePassed(){
+        if( mStartTime.getValue() != null )
+            return Duration.between( mStartTime.getValue(), Instant.now() );
         else
-            this.mQuestion.setValue( null );
+            return null;
+    }
+
+    public void setStartTime(Instant startTime, int maxDuration) {
+        this.mStartTime.postValue( startTime );
+        Instant endTime = startTime.plus( maxDuration, ChronoUnit.SECONDS );
+        this.mMaxTime.postValue( endTime );
+    }
+
+    public void setMaxTime(Instant maxTime) {
+        this.mMaxTime.setValue( maxTime );
+    }
+
+    public MutableLiveData<Instant> getStartTime() {
+        return mStartTime;
+    }
+
+    public MutableLiveData<Instant> getMaxTime() {
+        return mMaxTime;
     }
 }

@@ -23,6 +23,9 @@ import com.pikon.android_quiz.Quiz;
 import com.pikon.android_quiz.R;
 import com.pikon.android_quiz.databinding.FragmentResultBinding;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Date;
 import java.util.Locale;
 
 public class ResultFragment extends Fragment {
@@ -36,8 +39,15 @@ public class ResultFragment extends Fragment {
 
         binding = FragmentResultBinding.inflate( inflater, container, false );
         View root = binding.getRoot();
-
         getActivity().setTitle( "Quiz results" );
+
+        binding.btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController( view )
+                        .navigate( R.id.action_nav_result_to_nav_home );
+            }
+        });
 
         RecyclerView recycler = binding.rvRecycler;
         recycler.setLayoutManager( new LinearLayoutManager( getContext() ) );
@@ -55,15 +65,13 @@ public class ResultFragment extends Fragment {
                 }
             }
         } );
-        Log.d( "DEBUG", ((Quiz) getArguments().getSerializable( "quiz" )).toString() );
         resultViewModel.setQuiz( (Quiz) getArguments().getSerializable( "quiz" ) );
 
-        Fragment selfRef = this;
         Toolbar toolbar = (Toolbar) ( (AppCompatActivity) getActivity()).findViewById( R.id.toolbar );
         toolbar.setNavigationOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick( View view ) {
-                NavHostFragment.findNavController( selfRef )
+                Navigation.findNavController( view )
                         .navigate( R.id.action_nav_result_to_nav_home );
             }
         } );
@@ -81,8 +89,11 @@ public class ResultFragment extends Fragment {
     private void showQuizResults( Quiz quiz ) {
         int correct = quiz.getCorrectAnswersCount();
         int total =  quiz.getQuestions().size();
+        long seconds = Duration.between( (Instant)getArguments().getSerializable( "startTime" ), (Instant)getArguments().getSerializable( "finishTime" ) ).getSeconds();
         String score = String.format( Locale.ROOT, "%d/%d", correct, total, (float) correct/total * 100 );
         String percentage = String.format( Locale.ROOT, "(%.1f%%)", (float) correct/total * 100 );
+        binding.tvTime.setText(String.format( Locale.ROOT, "Finished in %d seconds!", seconds) );
+
         binding.tvScore.setText( score );
         binding.tvPercentage.setText( percentage );
 

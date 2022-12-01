@@ -5,6 +5,11 @@ import androidx.lifecycle.ViewModel;
 
 import com.pikon.android_quiz.Quiz;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
 public class ResultViewModel extends ViewModel {
 
     private MutableLiveData<Quiz> mQuiz;

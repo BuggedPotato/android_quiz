@@ -38,6 +38,15 @@
             android:id="@+id/action_nav_quiz_to_nav_result"
             app:destination="@id/nav_result"
             app:enterAnim="@anim/nav_default_enter_anim" />
+        <argument
+            android:name="shuffleQuestions"
+            app:argType="boolean" />
+        <argument
+            android:name="shuffleAnswers"
+            app:argType="boolean" />
+        <argument
+            android:name="startTime"
+            app:argType="java.time.Instant" />
     </fragment>
 
     <fragment
@@ -57,6 +66,12 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpTo="@id/nav_result"
             app:popUpToInclusive="false" />
+        <argument
+            android:name="startTime"
+            app:argType="java.time.Instant" />
+        <argument
+            android:name="finishTime"
+            app:argType="java.time.Instant" />
     </fragment>
 
     <fragment

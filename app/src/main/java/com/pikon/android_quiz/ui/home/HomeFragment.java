@@ -25,6 +25,8 @@ import com.pikon.android_quiz.Quiz;
 import com.pikon.android_quiz.R;
 import com.pikon.android_quiz.databinding.FragmentHomeBinding;
 
+import java.time.Instant;
+
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
@@ -61,8 +63,15 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
                 if( homeViewModel.getQuiz().getValue() == null ) return;
                 // TODO replace by passing quiz object?
+                boolean shuffleQuestions = binding.cbShuffleQuestions.isChecked();
+                boolean shuffleAnswers = binding.cbShuffleAnswers.isChecked();
+                String uri = homeViewModel.getQuiz().getValue().getUri();
                 Bundle bundle = new Bundle();
-                bundle.putString( "quizUri", homeViewModel.getQuiz().getValue().getUri() );
+                bundle.putString( "quizUri", uri );
+                bundle.putBoolean( "shuffleQuestions", shuffleQuestions );
+                bundle.putBoolean( "shuffleAnswers", shuffleAnswers );
+                bundle.putSerializable( "startTime", Instant.now() );
+                bundle.putInt( "maxDuration", Integer.parseInt(binding.etMaxDuration.getText().toString()) );
                 NavHostFragment.findNavController( selfRef )
                         .navigate( R.id.action_nav_home_to_nav_quiz, bundle );
             }
@@ -86,7 +95,6 @@ public class HomeFragment extends Fragment {
             binding.btnStartQuiz.setEnabled( false );
             return;
         }
-        Log.d( "DEBUG", quiz.toString() );
         binding.tvQuestionsCount.setText( String.format( "%d questions found", quiz.getQuestions().size() ) );
         binding.btnStartQuiz.setEnabled( true );
     }

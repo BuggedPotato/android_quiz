@@ -2,6 +2,7 @@ package com.pikon.android_quiz;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Question implements Serializable {
     private String text;
@@ -29,6 +30,10 @@ public class Question implements Serializable {
             this.result = AnswerResult.INCORRECT;
         else if( hasTrue && !hasFalse )
             this.result = AnswerResult.CORRECT;
+    }
+
+    public void shuffleAnswers(){
+        Collections.shuffle( answers );
     }
 
     public String getText() {

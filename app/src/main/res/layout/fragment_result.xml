@@ -4,14 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center_horizontal"
     android:padding="30dp"
     >
 
     <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Finished!"
+        android:textSize="24sp"
+        android:textAlignment="center"
+        />
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Your score:"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:textAlignment="center"
         />
     <LinearLayout
@@ -46,11 +55,21 @@
         android:progressDrawable="@drawable/score_progressbar"
         />
 
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:layout_margin="16dp"
+        android:text="go back"
+        android:textSize="10sp"
+        android:backgroundTint="@color/yellow_d"
+        android:textColor="@color/cardview_dark_background"
+        />
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/rvRecycler"
-        android:layout_marginTop="16dp"
         />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

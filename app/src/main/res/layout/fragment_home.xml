@@ -63,5 +63,30 @@
                 />
         </LinearLayout>
 
+        <CheckBox
+            android:id="@+id/cbShuffleQuestions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Shuffle questions"
+            />
+        <CheckBox
+            android:id="@+id/cbShuffleAnswers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Shuffle answers"
+            />
+        <EditText
+            android:id="@+id/etMaxDuration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:text="0"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Max seconds duration - 0 for none"
+            android:textSize="10sp"
+            />
     </LinearLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>

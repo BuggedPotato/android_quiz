@@ -23,17 +23,16 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.pikon.android_quiz.Answer;
-import com.pikon.android_quiz.MainActivity;
 import com.pikon.android_quiz.Question;
 import com.pikon.android_quiz.R;
 import com.pikon.android_quiz.databinding.FragmentQuestionBinding;
 import com.pikon.android_quiz.ui.home.DrawerLocker;
-import com.pikon.android_quiz.ui.home.HomeViewModel;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class QuestionFragment extends Fragment {
 
@@ -52,6 +51,8 @@ public class QuestionFragment extends Fragment {
                     Log.d( "DEBUG", "=== END ===" );
                     Bundle bundle = new Bundle();
                     bundle.putSerializable( "quiz", questionViewModel.getQuiz().getValue() );
+                    bundle.putSerializable( "startTime", (Instant)getArguments().getSerializable( "startTime" ) );
+                    bundle.putSerializable( "finishTime", Instant.now() );
                     NavHostFragment.findNavController( selfRef )
                             .navigate( R.id.action_nav_quiz_to_nav_result, bundle );
                     return;
@@ -61,7 +62,32 @@ public class QuestionFragment extends Fragment {
             }
         });
         questionViewModel.setQuiz(  getContext(), Uri.parse( getArguments().getString( "quizUri" ) ) );
-        questionViewModel.setQuestion( questionViewModel.getQuiz().getValue() );
+        boolean shuffleQuestions = getArguments().getBoolean( "shuffleQuestions" );
+        boolean shuffleAnswers = getArguments().getBoolean( "shuffleAnswers" );
+        int maxDuration = getArguments().getInt( "maxDuration" );
+        if( shuffleQuestions )
+            questionViewModel.getQuiz().getValue().shuffleQuestions();
+        if( shuffleAnswers )
+            questionViewModel.getQuiz().getValue().shuffleAnswers();
+
+        Log.d( "DEBUG", String.valueOf(maxDuration) );
+        setNextQuestion( maxDuration );
+        if( maxDuration != 0 ){
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    Duration timePassed = questionViewModel.getTimePassed();
+                    if( timePassed == null )
+                        return;
+                    if( timePassed.getSeconds() >= maxDuration ){
+                        setNextQuestion( maxDuration );
+                    }
+                    setTimeProgressBar((int) (maxDuration - timePassed.getSeconds()), maxDuration);
+                }
+            };
+            Timer timer = new Timer( "Timer" );
+            timer.schedule( task, 0, 200 );
+        }
 
         binding = FragmentQuestionBinding.inflate( inflater, container, false );
         View root = binding.getRoot();
@@ -70,8 +96,7 @@ public class QuestionFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 questionViewModel.getQuestion().getValue().answer( questionViewModel.getCheckedAnswers().getValue().toArray(new Answer[0]) );
-                Log.d( "DEBUG", questionViewModel.getQuestion().getValue().toString() );
-                questionViewModel.setQuestion( questionViewModel.getQuiz().getValue() );
+                setNextQuestion( maxDuration );
             }
         });
 
@@ -96,10 +121,14 @@ public class QuestionFragment extends Fragment {
                 builder.show();
             }
         });
-
         return root;
     }
 
+
+    private void setNextQuestion( int maxDuration ){
+        Instant startTime = Instant.now();
+        questionViewModel.setQuestion( questionViewModel.getQuiz().getValue(), startTime, maxDuration );
+    }
 
     private void showQuestionData( Question question ) {
         final TextView tvTitle = binding.tvTitle;
@@ -120,6 +149,13 @@ public class QuestionFragment extends Fragment {
                 }
             });
             llAnswers.addView(checkBox);
+        }
+    }
+
+    private void setTimeProgressBar( int value, int maxDuration ){
+        if( binding != null ){
+            binding.pbTime.setProgress( value, true );
+            binding.pbTime.setMax( maxDuration );
         }
     }
 
