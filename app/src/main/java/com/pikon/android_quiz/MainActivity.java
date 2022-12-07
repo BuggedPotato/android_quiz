@@ -1,6 +1,7 @@
 package com.pikon.android_quiz;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.Menu;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
@@ -71,13 +73,26 @@ public class MainActivity extends AppCompatActivity implements DrawerLocker {
         int lockMode = enabled ? DrawerLayout.LOCK_MODE_UNLOCKED :
                 DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
         binding.drawerLayout.setDrawerLockMode(lockMode);
-//        toggle.setDrawerIndicatorEnabled(enabled);
     }
 
     public void checkPermission(String permission, int requestCode) {
         if( ContextCompat.checkSelfPermission(MainActivity.this, permission) == PackageManager.PERMISSION_DENIED)
         {
             ActivityCompat.requestPermissions( MainActivity.this, new String[] {permission}, requestCode );
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if( requestCode == 420 || requestCode == 421 ) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            } else {
+                Intent i = new Intent( MainActivity.this, ErrorActivity.class );
+                i.putExtra( "message", "The application needs storage permissions to run!" );
+                startActivity( i );
+            }
         }
     }
 }
