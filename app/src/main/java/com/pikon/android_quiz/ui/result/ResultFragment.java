@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.pikon.android_quiz.AnswerResult;
 import com.pikon.android_quiz.QuestionsRecyclerAdapter;
 import com.pikon.android_quiz.Quiz;
 import com.pikon.android_quiz.R;
@@ -87,17 +89,29 @@ public class ResultFragment extends Fragment {
     }
 
     private void showQuizResults( Quiz quiz ) {
-        int correct = quiz.getCorrectAnswersCount();
-        int total =  quiz.getQuestions().size();
+        float correct = quiz.getScore();
+        float total =  quiz.getTotalScore();
         long seconds = Duration.between( (Instant)getArguments().getSerializable( "startTime" ), (Instant)getArguments().getSerializable( "finishTime" ) ).getSeconds();
-        String score = String.format( Locale.ROOT, "%d/%d", correct, total, (float) correct/total * 100 );
-        String percentage = String.format( Locale.ROOT, "(%.1f%%)", (float) correct/total * 100 );
+        String score = String.format( Locale.ROOT, "%.2f/%.2f", correct, total );
+        String percentage = String.format( Locale.ROOT, "(%.1f%%)", correct/total * 100 );
         binding.tvTime.setText(String.format( Locale.ROOT, "Finished in %d seconds!", seconds) );
 
         binding.tvScore.setText( score );
         binding.tvPercentage.setText( percentage );
 
-        binding.pbScoreBar.setMax( total );
-        binding.pbScoreBar.setProgress( correct, true );
+        binding.pbScoreBar.setMax( (int)(total * 100) );
+        binding.pbScoreBar.setProgress( (int)(correct * 100), true );
+
+        binding.llScoreBars.setClipToOutline(true);
+        binding.llScoreBars.addView( getScoreBar( AnswerResult.CORRECT, quiz.getAnsweredOfResultCount( AnswerResult.CORRECT ), quiz.getQuestions().size() ) );
+        binding.llScoreBars.addView( getScoreBar( AnswerResult.MIXED, quiz.getAnsweredOfResultCount( AnswerResult.MIXED ), quiz.getQuestions().size() ) );
+        binding.llScoreBars.addView( getScoreBar( AnswerResult.INCORRECT, quiz.getAnsweredOfResultCount( AnswerResult.INCORRECT ), quiz.getQuestions().size() ) );
+    }
+
+    private View getScoreBar(AnswerResult result, int count, int max){
+        View view = new View( getContext() );
+        view.setLayoutParams( new LinearLayout.LayoutParams( ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, max - count ) );
+        view.setBackgroundColor( getContext().getColor( QuestionsRecyclerAdapter.coloursBright.get( result ).getKey() ) );
+        return view;
     }
 }

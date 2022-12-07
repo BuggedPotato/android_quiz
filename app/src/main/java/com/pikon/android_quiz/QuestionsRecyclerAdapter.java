@@ -13,11 +13,23 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.AbstractMap;
 import java.util.HashMap;
+import java.util.Map;
 
 public class QuestionsRecyclerAdapter extends RecyclerView.Adapter<QuestionsRecyclerAdapter.ViewHolder> {
 
     private Quiz quiz;
+    public static final HashMap<AnswerResult, AbstractMap.SimpleEntry<Integer, Integer>> coloursDrawables = new HashMap<AnswerResult, AbstractMap.SimpleEntry<Integer, Integer>>() {{
+        put( AnswerResult.CORRECT, new AbstractMap.SimpleEntry( R.color.green_50, R.drawable.check_mark ) );
+        put( AnswerResult.INCORRECT, new AbstractMap.SimpleEntry( R.color.red_50, R.drawable.cross_mark ) );
+        put( AnswerResult.MIXED, new AbstractMap.SimpleEntry( R.color.yellow_d_50, R.drawable.tilde ) );
+    }};
+    public static final HashMap<AnswerResult, AbstractMap.SimpleEntry<Integer, Integer>> coloursBright = new HashMap<AnswerResult, AbstractMap.SimpleEntry<Integer, Integer>>() {{
+        put( AnswerResult.CORRECT, new AbstractMap.SimpleEntry( R.color.green, R.drawable.check_mark ) );
+        put( AnswerResult.INCORRECT, new AbstractMap.SimpleEntry( R.color.red, R.drawable.cross_mark ) );
+        put( AnswerResult.MIXED, new AbstractMap.SimpleEntry( R.color.yellow_d, R.drawable.tilde ) );
+    }};
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvTitle;
@@ -63,25 +75,19 @@ public class QuestionsRecyclerAdapter extends RecyclerView.Adapter<QuestionsRecy
         if ( holder.getLlAnswers().getChildCount() > 0 )
             holder.getLlAnswers().removeAllViews();
 
-        final HashMap<AnswerResult, Integer> dimmedColours = new HashMap<AnswerResult, Integer>() {{
-            put( AnswerResult.CORRECT, R.color.green_50 );
-            put( AnswerResult.INCORRECT, R.color.red_50 );
-            put( AnswerResult.MIXED, R.color.yellow_d_50 );
-        }};
-
         for ( Answer a : question.getAnswers() ) {
             CheckBox checkBox = new CheckBox( holder.getTvTitle().getContext() );
             checkBox.setText( a.getText() );
             checkBox.setLayoutParams( new LinearLayout.LayoutParams( ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT ) );
             checkBox.setChecked( a.isAnswered() );
 
-            Drawable drawable = AppCompatResources.getDrawable( holder.getTvTitle().getContext(), question.getResult() == AnswerResult.CORRECT ? R.drawable.check_mark : R.drawable.cross_mark );
+            Drawable drawable = AppCompatResources.getDrawable( holder.getTvTitle().getContext(), coloursDrawables.get( question.getResult() ).getValue() );
             holder.getIvAnswerResult().setImageDrawable( drawable );
 
             if ( a.isCorrect() )
-                checkBox.setBackgroundColor( holder.getTvTitle().getContext().getColor( dimmedColours.get( AnswerResult.CORRECT ) ) );
+                checkBox.setBackgroundColor( holder.getTvTitle().getContext().getColor( coloursDrawables.get( AnswerResult.CORRECT ).getKey() ) );
             else if ( !a.isCorrect() && a.isAnswered() )
-                checkBox.setBackgroundColor( holder.getTvTitle().getContext().getColor( dimmedColours.get( AnswerResult.INCORRECT ) ) );
+                checkBox.setBackgroundColor( holder.getTvTitle().getContext().getColor( coloursDrawables.get( AnswerResult.INCORRECT ).getKey() ) );
             checkBox.setClickable( false );
             holder.getLlAnswers().addView( checkBox );
         }

@@ -24,7 +24,7 @@ public class Question implements Serializable {
         }
         boolean hasFalse = results.contains(false);
         boolean hasTrue = results.contains(true);
-        if( hasTrue && hasFalse )
+        if( (hasTrue && hasFalse) || (hasTrue && !hasFalse && answers.length != this.answers.stream().filter( Answer::isCorrect ).count()) )
             this.result = AnswerResult.MIXED;
         else if( hasFalse && !hasTrue )
             this.result = AnswerResult.INCORRECT;

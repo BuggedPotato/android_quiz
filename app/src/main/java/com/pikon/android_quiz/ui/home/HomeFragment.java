@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -20,6 +21,7 @@ import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.pikon.android_quiz.CountPointsFor;
 import com.pikon.android_quiz.MainActivity;
 import com.pikon.android_quiz.Quiz;
 import com.pikon.android_quiz.R;
@@ -65,17 +67,32 @@ public class HomeFragment extends Fragment {
                 // TODO replace by passing quiz object?
                 boolean shuffleQuestions = binding.cbShuffleQuestions.isChecked();
                 boolean shuffleAnswers = binding.cbShuffleAnswers.isChecked();
+                int pointsPer = Integer.parseInt(binding.etPointsPer.getText().toString());
+                CountPointsFor countPointsFor = binding.cbPerAnswer.isChecked() ? CountPointsFor.QUESTION : CountPointsFor.ANSWER;
                 String uri = homeViewModel.getQuiz().getValue().getUri();
                 Bundle bundle = new Bundle();
                 bundle.putString( "quizUri", uri );
                 bundle.putBoolean( "shuffleQuestions", shuffleQuestions );
                 bundle.putBoolean( "shuffleAnswers", shuffleAnswers );
+
+                bundle.putInt( "pointsPer", pointsPer );
+                bundle.putSerializable( "countPointsFor", countPointsFor );
+
                 bundle.putSerializable( "startTime", Instant.now() );
                 bundle.putInt( "maxDuration", Integer.parseInt(binding.etMaxDuration.getText().toString()) );
                 NavHostFragment.findNavController( selfRef )
                         .navigate( R.id.action_nav_home_to_nav_quiz, bundle );
             }
         });
+
+        binding.cbPerAnswer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                String label = b ? "for a question" : "for every answer";
+                compoundButton.setText( label );
+            }
+        });
+
         return root;
     }
 

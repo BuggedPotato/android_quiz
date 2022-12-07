@@ -23,6 +23,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.pikon.android_quiz.Answer;
+import com.pikon.android_quiz.CountPointsFor;
 import com.pikon.android_quiz.Question;
 import com.pikon.android_quiz.R;
 import com.pikon.android_quiz.databinding.FragmentQuestionBinding;
@@ -61,9 +62,11 @@ public class QuestionFragment extends Fragment {
                 questionViewModel.clearCheckedAnswers();
             }
         });
-        questionViewModel.setQuiz(  getContext(), Uri.parse( getArguments().getString( "quizUri" ) ) );
         boolean shuffleQuestions = getArguments().getBoolean( "shuffleQuestions" );
         boolean shuffleAnswers = getArguments().getBoolean( "shuffleAnswers" );
+        int pointsPer = getArguments().getInt( "pointsPer" );
+        CountPointsFor countPointsFor = (CountPointsFor) getArguments().getSerializable( "countPointsFor" );
+        questionViewModel.setQuiz(  getContext(), Uri.parse( getArguments().getString( "quizUri" ) ), pointsPer, countPointsFor );
         int maxDuration = getArguments().getInt( "maxDuration" );
         if( shuffleQuestions )
             questionViewModel.getQuiz().getValue().shuffleQuestions();
@@ -159,19 +162,19 @@ public class QuestionFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
-        ((DrawerLocker)getActivity()).setDrawerEnabled(false);
-        Log.d( "DEBUG", "LOCKED" );
-    }
-    @Override
-    public void onStop() {
-        super.onStop();
-        ((AppCompatActivity)getActivity()).getSupportActionBar().show();
-        ((DrawerLocker)getActivity()).setDrawerEnabled(true);
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+//        ((DrawerLocker)getActivity()).setDrawerEnabled(false);
+//        Log.d( "DEBUG", "LOCKED" );
+//    }
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        ((AppCompatActivity)getActivity()).getSupportActionBar().show();
+//        ((DrawerLocker)getActivity()).setDrawerEnabled(true);
+//    }
 
     @Override
     public void onDestroyView() {

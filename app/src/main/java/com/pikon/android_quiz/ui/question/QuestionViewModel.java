@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.pikon.android_quiz.Answer;
+import com.pikon.android_quiz.CountPointsFor;
 import com.pikon.android_quiz.Question;
 import com.pikon.android_quiz.Quiz;
 import com.pikon.android_quiz.QuizFileReader;
@@ -65,8 +66,11 @@ public class QuestionViewModel extends ViewModel {
         return mQuiz;
     }
 
-    public void setQuiz( Context context, Uri uri ) {
-        this.mQuiz.setValue( QuizFileReader.getFileData( context, uri ) );
+    public void setQuiz( Context context, Uri uri, int pointsPer, CountPointsFor countPointsFor  ) {
+        Quiz q = QuizFileReader.getFileData( context, uri );
+        q.setPointsPer( pointsPer );
+        q.setCountPointsFor( countPointsFor );
+        this.mQuiz.setValue( q );
     }
     
     public void setQuiz(Quiz quiz) {
