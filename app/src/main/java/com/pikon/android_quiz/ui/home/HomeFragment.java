@@ -14,15 +14,13 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavOptions;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.pikon.android_quiz.CountPointsFor;
-import com.pikon.android_quiz.MainActivity;
 import com.pikon.android_quiz.Quiz;
 import com.pikon.android_quiz.R;
 import com.pikon.android_quiz.databinding.FragmentHomeBinding;
@@ -49,6 +47,7 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
 
         getActivity().setTitle( "Choose your quiz" );
+//        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
 
         final Button btnLoadFile = binding.btnLoadFile;
         btnLoadFile.setOnClickListener( new View.OnClickListener() {
@@ -115,6 +114,8 @@ public class HomeFragment extends Fragment {
         binding.tvQuestionsCount.setText( String.format( "%d questions found", quiz.getQuestions().size() ) );
         binding.btnStartQuiz.setEnabled( true );
     }
+
+
 
     @Override
     public void onDestroyView() {

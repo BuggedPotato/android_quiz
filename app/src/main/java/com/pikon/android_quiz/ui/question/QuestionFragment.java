@@ -1,6 +1,7 @@
 package com.pikon.android_quiz.ui.question;
 
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,9 +12,11 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -39,6 +42,7 @@ public class QuestionFragment extends Fragment {
 
     private FragmentQuestionBinding binding;
     private QuestionViewModel questionViewModel;
+    private ActionBar actionBar;
 
     public View onCreateView( @NonNull LayoutInflater inflater,
                               ViewGroup container, Bundle savedInstanceState ) {
@@ -62,6 +66,7 @@ public class QuestionFragment extends Fragment {
                 questionViewModel.clearCheckedAnswers();
             }
         });
+
         boolean shuffleQuestions = getArguments().getBoolean( "shuffleQuestions" );
         boolean shuffleAnswers = getArguments().getBoolean( "shuffleAnswers" );
         int pointsPer = getArguments().getInt( "pointsPer" );

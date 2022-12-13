@@ -1,5 +1,6 @@
 package com.pikon.android_quiz.ui.result;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -68,15 +69,6 @@ public class ResultFragment extends Fragment {
             }
         } );
         resultViewModel.setQuiz( (Quiz) getArguments().getSerializable( "quiz" ) );
-
-        Toolbar toolbar = (Toolbar) ( (AppCompatActivity) getActivity()).findViewById( R.id.toolbar );
-        toolbar.setNavigationOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick( View view ) {
-                Navigation.findNavController( view )
-                        .navigate( R.id.action_nav_result_to_nav_home );
-            }
-        } );
 
         requireActivity().getOnBackPressedDispatcher().addCallback( new OnBackPressedCallback(true) {
             @Override

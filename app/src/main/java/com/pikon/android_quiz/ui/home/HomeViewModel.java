@@ -14,11 +14,13 @@ public class HomeViewModel extends ViewModel {
 
     private final MutableLiveData<String> mText;
     private MutableLiveData<Quiz> mQuiz;
+    private MutableLiveData<String> mRawData;
 
     public HomeViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue( "This is home fragment" );
         mQuiz = new MutableLiveData<Quiz>();
+        mRawData = new MutableLiveData<String>();
     }
 
     public LiveData<Quiz> getQuiz() {
@@ -35,5 +37,13 @@ public class HomeViewModel extends ViewModel {
 
     public LiveData<String> getText() {
         return mText;
+    }
+
+    public MutableLiveData<String> getRawData() {
+        return mRawData;
+    }
+
+    public void setRawData( String mRawData ) {
+        this.mRawData.setValue( mRawData );
     }
 }
